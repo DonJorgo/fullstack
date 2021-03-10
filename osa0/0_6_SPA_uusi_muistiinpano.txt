@@ -1,0 +1,15 @@
+title SPA lähetys
+
+note over selain
+1. Luo uusi muistiinpano lomakkeen perusteella ja lisää listaan
+2. Tyhjennä lomake
+3. Piirrä muistiinpanolista uudelleen
+4. Lähetä muistiinpano-olio JSON-muodossa palvelimelle
+end note
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa, Content-type=application/json
+
+palvelin-->selain: {"message":"note created"}, Status Code = 201 Created
+
+note over selain
+kirjoita vastaus konsoliin
+end note
