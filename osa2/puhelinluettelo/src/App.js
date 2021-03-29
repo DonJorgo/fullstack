@@ -5,15 +5,18 @@ const App = () => {
     { name: 'Arto Hellas' }
   ])
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const newNameExists = () =>
     persons.some(({ name }) => name === newName)
+
 
   const addName = (event) => {
     event.preventDefault()
     if (!newNameExists()) {
       const personsObject = {
-        name: newName
+        name: newName,
+        number: newNumber
       }
       setPersons(persons.concat(personsObject))
     } else {
@@ -23,6 +26,10 @@ const App = () => {
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
   }
 
   return (
@@ -36,6 +43,13 @@ const App = () => {
             value={newName}
             onChange={handleNameChange}
           />
+          <div>
+            number:
+            <input
+              value={newNumber}
+              onChange={handleNumberChange}
+            />
+          </div>
         </div>
         <div>
           <button type="submit">add</button>
@@ -43,6 +57,9 @@ const App = () => {
       </form>
 
       <h2>Numbers</h2>
+      {persons.map(({ name, number }) =>
+        <div key={name}>{name} {number}</div>
+      )}
 
     </div>
   )
