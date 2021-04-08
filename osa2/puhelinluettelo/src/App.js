@@ -14,10 +14,10 @@ const App = () => {
 
   useEffect(() => {
     axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
-    })
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
   }, [])
 
   const personsToShow = persons.filter(person =>
