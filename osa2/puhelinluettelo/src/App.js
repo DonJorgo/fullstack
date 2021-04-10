@@ -24,44 +24,66 @@ const App = () => {
     person.name.toLowerCase().includes(filterString.toLowerCase())
   )
 
-  const handleFilterChange = (event) => {
+  const handleFilterChange = event => {
     setFilterString(event.target.value)
   }
 
-  const handlePersonSubmit = (event) => {
+
+  const handlePersonSubmit = event => {
     event.preventDefault()
     if (!newNameExists()) {
-      const personsObject = {
-        name: newName,
-        number: newNumber
-      }
-      personService
-        .create(personsObject)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-        })
+      createPerson()
     } else {
-      alert(`${newName} is already added to phonebook`)
+      const question = `${newName} is already added to phonebook, replace the old number with a new one?`
+      if (window.confirm(question)) {
+        updatePerson()
+      }
     }
   }
 
   const newNameExists = () =>
     persons.some(({ name }) => name === newName)
 
-  const handleNameChange = (event) => {
+  const createPerson = () => {
+    personService
+      .create({
+        name: newName,
+        number: newNumber
+      })
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+      })
+  }
+
+  const updatePerson = () => {
+    const person = persons.find(p => p.name === newName)
+    const changedPerson = { ...person, number: newNumber }
+    personService
+      .update(person.id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(p =>
+          p.id !== person.id ? p : returnedPerson)
+        )
+      })
+  }
+
+
+  const handleNameChange = event => {
     setNewName(event.target.value)
   }
 
-  const handleNumberChange = (event) => {
+
+  const handleNumberChange = event => {
     setNewNumber(event.target.value)
   }
 
-  const handleRemove = (person) => {
+
+  const handleRemove = person => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .remove(person)
         .then(() =>
-          setPersons(persons.filter(p => p.id != person.id))
+          setPersons(persons.filter(p => p.id !== person.id))
         )
     }
   }
