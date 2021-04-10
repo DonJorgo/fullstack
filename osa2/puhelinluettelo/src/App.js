@@ -36,7 +36,7 @@ const App = () => {
         number: newNumber
       }
       personService
-      .create(personsObject)
+        .create(personsObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
         })
@@ -54,6 +54,16 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  const handleRemove = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService
+        .remove(person)
+        .then(() =>
+          setPersons(persons.filter(p => p.id != person.id))
+        )
+    }
   }
 
   return (
@@ -77,7 +87,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onRemove={handleRemove} />
 
     </div>
   )
