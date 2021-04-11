@@ -5,12 +5,14 @@ import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterString, setFilterString] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     personService
@@ -24,6 +26,13 @@ const App = () => {
     person.name.toLowerCase().includes(filterString.toLowerCase())
   )
 
+
+  const notify = (message) => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleFilterChange = event => {
     setFilterString(event.target.value)
@@ -42,6 +51,7 @@ const App = () => {
           number: newNumber
         })
         .then(returnedPerson => {
+          notify(`Added ${returnedPerson.name}`)
           setPersons(persons.concat(returnedPerson))
         })
     }
@@ -52,6 +62,7 @@ const App = () => {
       personService
         .update(person.id, changedPerson)
         .then(returnedPerson => {
+          notify(`${returnedPerson.name} number changed from ${person.number} to ${returnedPerson.number}`)
           setPersons(persons.map(p =>
             p.id !== person.id ? p : returnedPerson)
           )
@@ -84,17 +95,18 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .remove(person)
-        .then(() =>
+        .then(() => {
+          notify(`${person.name} removed succesfully`)
           setPersons(persons.filter(p => p.id !== person.id))
-        )
+        })
     }
   }
 
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification message={notification} />
       <Filter
         value={filterString}
         onChange={handleFilterChange}
