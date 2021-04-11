@@ -19,4 +19,5 @@ const update = (id, updatedPerson) =>
     response(axios.put(`${baseUrl}/${id}`, updatedPerson))
 
 
-export default { getAll, create, remove, update }
+const personService = { getAll, create, remove, update }
+export default personService
