@@ -1,13 +1,13 @@
 import './notification.css'
 
-const Notification = ({ message }) => {
+const Notification = ({ message, isError }) => {
 
     if (message == null) {
         return null
     }
 
     return (
-        <div className="notification">
+        <div className={`notification ${isError ? 'error' : 'success'}`}>
             {message}
         </div>
     )
