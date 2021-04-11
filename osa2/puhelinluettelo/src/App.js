@@ -24,12 +24,40 @@ const App = () => {
     person.name.toLowerCase().includes(filterString.toLowerCase())
   )
 
+
   const handleFilterChange = event => {
     setFilterString(event.target.value)
   }
 
 
   const handlePersonSubmit = event => {
+
+    const newNameExists = () =>
+      persons.some(({ name }) => name === newName)
+
+    const createPerson = () => {
+      personService
+        .create({
+          name: newName,
+          number: newNumber
+        })
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+        })
+    }
+
+    const updatePerson = () => {
+      const person = persons.find(p => p.name === newName)
+      const changedPerson = { ...person, number: newNumber }
+      personService
+        .update(person.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p =>
+            p.id !== person.id ? p : returnedPerson)
+          )
+        })
+    }
+
     event.preventDefault()
     if (!newNameExists()) {
       createPerson()
@@ -39,32 +67,6 @@ const App = () => {
         updatePerson()
       }
     }
-  }
-
-  const newNameExists = () =>
-    persons.some(({ name }) => name === newName)
-
-  const createPerson = () => {
-    personService
-      .create({
-        name: newName,
-        number: newNumber
-      })
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-      })
-  }
-
-  const updatePerson = () => {
-    const person = persons.find(p => p.name === newName)
-    const changedPerson = { ...person, number: newNumber }
-    personService
-      .update(person.id, changedPerson)
-      .then(returnedPerson => {
-        setPersons(persons.map(p =>
-          p.id !== person.id ? p : returnedPerson)
-        )
-      })
   }
 
 
@@ -88,6 +90,7 @@ const App = () => {
     }
   }
 
+  
   return (
     <div>
       <h2>Phonebook</h2>
