@@ -56,6 +56,10 @@ const App = () => {
           notify(`Added ${returnedPerson.name}`)
           setPersons(persons.concat(returnedPerson))
         })
+        .catch(error => {
+          const message = error.response.data.error
+          notifyError(message)
+        })
     }
 
     const updatePerson = () => {
