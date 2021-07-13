@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Logout from './components/Logout'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +15,7 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const [notification, setNotification] = useState({message: null})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,6 +31,15 @@ const App = () => {
       setUser(user)
     }
   }, [])
+
+
+  const notify = (message, isError = false) => {
+    setNotification({ message, isError })
+    setTimeout(() => {
+      setNotification({ message: null })
+    }, 5000)
+  }
+
 
   const hadleLogin = async (event) => {
     event.preventDefault()
@@ -45,9 +57,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-     
+      notify(error.response.data.error, true)
     }
   }
+
 
   const handleLogout = (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
@@ -65,20 +78,34 @@ const App = () => {
         url: newUrl
       })
       setBlogs(blogs.concat(returnedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+      notify(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     } catch (error) {
-
+      notify(error.response.data.error, true)
     }
   }
 
+
   if (user === null) {
     return (
-      <LoginForm
-        username={username}
-        value={password}
-        onSubmit={hadleLogin}
-        onUsernameChange={({target}) => setUsername(target.value)}
-        onPasswordChange={({target}) => setPassword(target.value)}
-      />
+      <div>
+        <h2>Log in to application</h2>
+
+        <Notification 
+          message={notification.message}
+          isError={notification.isError}
+        />
+
+        <LoginForm
+          username={username}
+          value={password}
+          onSubmit={hadleLogin}
+          onUsernameChange={({target}) => setUsername(target.value)}
+          onPasswordChange={({target}) => setPassword(target.value)}
+        />
+      </div>
     )
   }
 
@@ -86,11 +113,17 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <p>{user.name} logged in
-        <button onClick={handleLogout}>
-          logout
-        </button>
-      </p>
+
+      <Notification 
+        message={notification.message}
+        isError={notification.isError}
+      />
+
+      <Logout
+        name={user.name}
+        onLogout={handleLogout}
+      />
+
       <BlogForm
         title={newTitle}
         author={newAuthor}

@@ -21,5 +21,6 @@ const create = async newObject => {
   return response.data
 }
 
+const exports = { getAll, create, setToken }
 
-export default { getAll, create, setToken }
+export default exports
