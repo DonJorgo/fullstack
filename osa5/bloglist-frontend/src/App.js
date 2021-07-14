@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort(compareByLikes) )
     )  
   }, [])
 
@@ -80,11 +80,20 @@ const App = () => {
     }
   }
 
+  const compareByLikes = (blog1, blog2) => {
+    if (blog1.likes < blog2.likes) return 1
+    if (blog1.likes > blog2.likes) return -1
+    return 0
+  }
 
   const handleLike = async (id, blogObject) => {
     try {
       const returnedBlog = await blogService.update(id, blogObject)
-      setBlogs(blogs.filter(b => b.id !== id).concat(returnedBlog))
+      const sortedBlogs = blogs
+        .filter(b => b.id !== id)
+        .concat(returnedBlog)
+        .sort(compareByLikes)
+      setBlogs(sortedBlogs)
     } catch(error) {
       notify(error.response.data.error, true)
     }
