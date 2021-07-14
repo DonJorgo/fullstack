@@ -41,7 +41,7 @@ const App = () => {
   }
 
 
-  const hadleLogin = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
   
     try {
@@ -81,6 +81,15 @@ const App = () => {
   }
 
 
+  const handleLike = async (id, blogObject) => {
+    try {
+      const returnedBlog = await blogService.update(id, blogObject)
+      setBlogs(blogs.filter(b => b.id !== id).concat(returnedBlog))
+    } catch(error) {
+      notify(error.response.data.error, true)
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -94,7 +103,7 @@ const App = () => {
         <LoginForm
           username={username}
           value={password}
-          onSubmit={hadleLogin}
+          onSubmit={handleLogin}
           onUsernameChange={({target}) => setUsername(target.value)}
           onPasswordChange={({target}) => setPassword(target.value)}
         />
@@ -122,7 +131,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog}  onLike={handleLike}/>
       )}
     </div>
   )
