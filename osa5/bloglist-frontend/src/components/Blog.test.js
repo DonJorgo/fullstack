@@ -18,9 +18,11 @@ describe('<Blog />', () => {
 
   let component
 
+  const onLikeMock = jest.fn()
+
   beforeEach(() => {
     component = render(
-      <Blog blog={blog}/>
+      <Blog blog={blog} onLike={onLikeMock}/>
     )
   })
 
@@ -51,7 +53,14 @@ describe('<Blog />', () => {
 
     expect(likesElement).toBeVisible()
     expect(likesElement).toHaveTextContent(blog.likes)
-
   })
 
+
+  test('calls props.onLike every time the like button is pressed', () => {
+    const likeButton = component.getByText('like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(onLikeMock.mock.calls).toHaveLength(2)
+  })
 })
