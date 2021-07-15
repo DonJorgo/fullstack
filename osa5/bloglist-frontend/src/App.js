@@ -13,14 +13,14 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({message: null})
+  const [notification, setNotification] = useState({ message: null })
 
   const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort(compareByLikes) )
-    )  
+    )
   }, [])
 
 
@@ -51,7 +51,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-  
+
     try {
       const user = await loginService.login({
         username, password,
@@ -59,7 +59,7 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -70,7 +70,7 @@ const App = () => {
   }
 
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
     setUser(null)
@@ -118,7 +118,7 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
 
-        <Notification 
+        <Notification
           message={notification.message}
           isError={notification.isError}
         />
@@ -127,8 +127,8 @@ const App = () => {
           username={username}
           value={password}
           onSubmit={handleLogin}
-          onUsernameChange={({target}) => setUsername(target.value)}
-          onPasswordChange={({target}) => setPassword(target.value)}
+          onUsernameChange={({ target }) => setUsername(target.value)}
+          onPasswordChange={({ target }) => setPassword(target.value)}
         />
       </div>
     )
@@ -138,7 +138,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <Notification 
+      <Notification
         message={notification.message}
         isError={notification.isError}
       />
@@ -148,17 +148,17 @@ const App = () => {
         onLogout={handleLogout}
       />
 
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}> 
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm onSubmit={handleBlogSubmit} />
       </Togglable>
 
       {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog}  
+        <Blog
+          key={blog.id}
+          blog={blog}
           onLike={handleLike}
           onRemove={handleRemove}
-          ownBlog={blog.user.username === user.username}  
+          ownBlog={blog.user.username === user.username}
         />
       )}
     </div>

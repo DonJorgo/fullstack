@@ -7,12 +7,12 @@ const LoginForm = ({
   onPasswordChange,
   username,
   password
-  }) => (
+}) => (
   <div>
     <form onSubmit={onSubmit}>
       <div>
         username
-        <input 
+        <input
           type="text"
           value={username}
           name="Username"
@@ -21,17 +21,17 @@ const LoginForm = ({
       </div>
       <div>
         password
-        <input 
+        <input
           type="password"
           value={password}
           name="Password"
           onChange={onPasswordChange}
-      />
+        />
       </div>
       <button type="submit">login</button>
     </form>
   </div>
-  )
+)
 
 LoginForm.propTypes  = {
   onSubmit: PropTypes.func.isRequired,
