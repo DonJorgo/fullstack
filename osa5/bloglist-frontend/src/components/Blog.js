@@ -38,7 +38,7 @@ const Blog = ({ blog, onLike, onRemove, ownBlog }) => {
       {blog.title} {blog.author}
       <button onClick={toggleDetails}>{buttonLabel}</button>
 
-      <div style={showWithDetails}>
+      <div style={showWithDetails} className="details">
         <div>{blog.url}</div>
 
         <div>
