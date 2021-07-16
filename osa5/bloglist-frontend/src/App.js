@@ -125,7 +125,7 @@ const App = () => {
 
         <LoginForm
           username={username}
-          value={password}
+          password={password}
           onSubmit={handleLogin}
           onUsernameChange={({ target }) => setUsername(target.value)}
           onPasswordChange={({ target }) => setPassword(target.value)}
