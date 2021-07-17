@@ -42,7 +42,26 @@ describe('Blog app', function (){
 
       cy.get('html')
         .should('not.contain', 'Blog App e2e test user logged in')
+    })
+  })
 
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'testuser1', password: 'salasana' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('button', 'create new blog').click()
+      cy.contains('title:').find('input').type('Blog Title')
+      cy.contains('author:').find('input').type('Blog Author')
+      cy.contains('url:').find('input').type('http://localhost')
+      cy.get('#submitNewBlog').click()
+
+      cy.contains('a new blog Blog Title by Blog Author added')
+        .and('have.css', 'color', 'rgb(0, 128, 0)')
+
+      cy.get('html')
+        .should('contain', 'Blog Title Blog Author')
     })
   })
 })

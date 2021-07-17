@@ -49,7 +49,7 @@ const BlogForm = ({ onSubmit }) => {
             onChange={({ target }) => setNewUrl(target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <button id="submitNewBlog" type="submit">create</button>
       </form>
     </div>
   )
