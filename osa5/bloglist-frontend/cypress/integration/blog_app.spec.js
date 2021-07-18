@@ -1,14 +1,11 @@
 describe('Blog app', function (){
   beforeEach(function () {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    const user = {
+    cy.resetDB()
+    cy.createUser({
       name: 'Blog App e2e test user',
       username: 'testuser1',
       password: 'salasana'
-    }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
-
-    cy.visit('http://localhost:3000')
+    })
   })
 
   it('Login form is shown', function() {
@@ -62,6 +59,23 @@ describe('Blog app', function (){
 
       cy.get('html')
         .should('contain', 'Blog Title Blog Author')
+    })
+
+    describe('and several blogs exist', function () {
+
+      beforeEach( function() {
+        cy.createBlog({ title: 'title1', author: 'author1', url: 'http://localhost' })
+        cy.createBlog({ title: 'title2', author: 'author2', url: 'http://localhost' })
+        cy.createBlog({ title: 'title3', author: 'author3', url: 'http://localhost' })
+      })
+
+      it('one of those can be liked', function() {
+        cy.contains('title2').contains('view').click()
+        cy.contains('title2').contains('like').parent().as('secondBlogLikes')
+        cy.get('@secondBlogLikes').contains('0')
+        cy.get('@secondBlogLikes').find('button').click()
+        cy.get('@secondBlogLikes').contains('1')
+      })
     })
   })
 })
