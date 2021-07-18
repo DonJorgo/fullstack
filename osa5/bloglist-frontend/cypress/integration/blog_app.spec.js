@@ -76,6 +76,24 @@ describe('Blog app', function (){
         cy.get('@secondBlogLikes').find('button').click()
         cy.get('@secondBlogLikes').contains('1')
       })
+
+      it('creator of a blog can remove it', function() {
+        cy.get('html').should('contain', 'title3 author3')
+        cy.contains('title3').contains('view').click()
+        cy.contains('title3').contains('Remove').click()
+        cy.get('html').should('not.contain', 'title3 author3')
+      })
+
+      it('user other than the creator of a blog can not remove it', function(){
+        cy.createUser({
+          name: 'User Without Blogs',
+          username: 'otheruser',
+          password: 'salasana'
+        })
+        cy.login({ username: 'otheruser', password: 'salasana' })
+        cy.contains('view').click()
+        cy.get('html').contains('Remove').should('not.be.visible')
+      })
     })
   })
 })
