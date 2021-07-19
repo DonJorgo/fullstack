@@ -67,6 +67,7 @@ describe('Blog app', function (){
         cy.createBlog({ title: 'title1', author: 'author1', url: 'http://localhost' })
         cy.createBlog({ title: 'title2', author: 'author2', url: 'http://localhost' })
         cy.createBlog({ title: 'title3', author: 'author3', url: 'http://localhost' })
+        cy.createBlog({ title: 'title4', author: 'author4', url: 'http://localhost' })
       })
 
       it('one of those can be liked', function() {
@@ -94,6 +95,26 @@ describe('Blog app', function (){
         cy.contains('view').click()
         cy.get('html').contains('Remove').should('not.be.visible')
       })
+
+      it('they are oredered based on likes', function() {
+        clickBlog('title2', 3)
+        clickBlog('title3', 1)
+        clickBlog('title4', 2)
+        cy.get('#blogs > div:nth-child(1)').contains('title2')
+        cy.get('#blogs > div:nth-child(2)').contains('title4')
+        cy.get('#blogs > div:nth-child(3)').contains('title3')
+        cy.get('#blogs > div:nth-child(4)').contains('title1')
+      })
+
+      function clickBlog(title, times) {
+        cy.get('#blogs').contains(title).as(title)
+        cy.get(`@${title}`).contains('view').click()
+        for(let i = 0; i < times; i++) {
+          cy.get(`@${title}`).contains('like').click()
+          cy.get(`@${title}`).contains('like').parent().contains(i+1)
+        }
+      }
+
     })
   })
 })

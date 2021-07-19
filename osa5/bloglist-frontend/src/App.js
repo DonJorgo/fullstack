@@ -152,15 +152,17 @@ const App = () => {
         <BlogForm onSubmit={handleBlogSubmit} />
       </Togglable>
 
-      {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          onLike={handleLike}
-          onRemove={handleRemove}
-          ownBlog={blog.user.username === user.username}
-        />
-      )}
+      <div id="blogs">
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            onLike={handleLike}
+            onRemove={handleRemove}
+            ownBlog={blog.user.username === user.username}
+          />
+        )}
+      </div>
     </div>
   )
 }
