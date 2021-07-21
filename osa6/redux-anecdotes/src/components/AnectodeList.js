@@ -4,24 +4,24 @@ import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { showNotification, hideNotification } from '../reducers/notificationReducer'
 
 
-const AnecdoteList = (props) => {
+const AnecdoteList = () => {
 
-  const anecdotes = useSelector(state => 
+  const anecdotes = useSelector(state =>
     state.anecdotes
-      .filter(({content}) => content.includes(state.filter))
+      .filter(({ content }) => content.includes(state.filter))
   )
 
   const seq = useSelector(state => state.notification.seq)
- 
+
   const dispatch = useDispatch()
 
 
-  const vote = ({id, content}) => {
+  const vote = ({ id, content }) => {
     dispatch(voteAnecdote(id))
 
     const message = `you voted ${content}`
     dispatch(showNotification(message, seq+1))
-    setTimeout(() => 
+    setTimeout(() =>
       dispatch(hideNotification(message, seq+1)), 5000)
   }
 

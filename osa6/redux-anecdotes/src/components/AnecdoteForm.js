@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { showNotification, hideNotification } from '../reducers/notificationReducer'
 
-const AnecdoteForm = (props) => {
+const AnecdoteForm = () => {
 
   const dispatch = useDispatch()
   const seq = useSelector(state => state.notification.seq)
@@ -16,7 +16,7 @@ const AnecdoteForm = (props) => {
 
     const message = `created anecdote: '${content}'`
     dispatch(showNotification(message, seq+1))
-    setTimeout(() => 
+    setTimeout(() =>
       dispatch(hideNotification(message, seq+1)), 5000)
   }
 
@@ -31,6 +31,6 @@ const AnecdoteForm = (props) => {
     </>
   )
 
-} 
+}
 
 export default AnecdoteForm
