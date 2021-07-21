@@ -12,7 +12,7 @@ const reducer = combineReducers({
 })
 
 const store = createStore(
-  reducer, 
+  reducer,
   composeWithDevTools()
 )
 
