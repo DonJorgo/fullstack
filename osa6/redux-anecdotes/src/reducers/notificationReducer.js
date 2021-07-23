@@ -1,37 +1,45 @@
-export const setNotification = (message, timeout, seq) => {
+export const setNotification = (message, timeout) => {
   return async dispatch => {
     dispatch({
       type: 'SET_NOTIFICATION',
-      data: { message, seq }
+      data: {
+        message,
+        timeoutId: setTimeout(() =>
+          dispatch(clearNotification()), timeout * 1000)
+      }
     })
-    setTimeout(() =>
-      dispatch(clearNotification(message, seq)), timeout * 1000)
   }
 }
 
-
-export const clearNotification = (message, seq) => {
+const clearNotification = () => {
   return {
     type: 'CLEAR_NOTIFICATION',
-    data: { message, seq }
+    data: { }
   }
+}
+
+const updateTimeout = (state, action) => {
+  clearTimeout(state.timeoutId)
+  return action.data.timeoutId
 }
 
 
 const initialState = {
   message: 'initial notification...',
   visble: false,
-  seq: 0
+  timeoutId: 0
 }
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      return { message: action.data.message, visible: true, seq: action.data.seq }
+      return {
+        message: action.data.message,
+        visible: true,
+        timeoutId: updateTimeout(state, action)
+      }
     case 'CLEAR_NOTIFICATION':
-      return action.data.message === state.message && action.data.seq === state.seq
-        ? { ...state, visible: false }
-        : state
+      return { ...state, visible: false }
     default:
       return state
   }

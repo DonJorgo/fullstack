@@ -11,15 +11,11 @@ const AnecdoteList = () => {
       .filter(({ content }) => content.includes(state.filter))
   )
 
-  const seq = useSelector(state => state.notification.seq)
-
   const dispatch = useDispatch()
-
 
   const vote = (anecdote) => {
     dispatch(voteAnecdote(anecdote))
-    const message = `you voted '${anecdote.content}'`
-    dispatch(setNotification(message, 5, seq+1))
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
   }
 
 
