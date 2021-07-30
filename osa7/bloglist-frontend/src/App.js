@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useDispatch } from 'react-redux'
+
 import LoginForm from './components/LoginForm'
+import Logout from './components/Logout'
+import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import Logout from './components/Logout'
 import Togglable from './components/Togglable'
+
+import loginService from './services/login'
+import blogService from './services/blogs'
+
+import { setNotification, setError } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({ message: null })
+
+  const dispatch = useDispatch()
 
   const blogFormRef = useRef()
 
@@ -35,10 +41,10 @@ const App = () => {
 
 
   const notify = (message, isError = false) => {
-    setNotification({ message, isError })
-    setTimeout(() => {
-      setNotification({ message: null })
-    }, 5000)
+    dispatch(isError
+      ? setError(message)
+      : setNotification(message)
+    )
   }
 
 
@@ -118,10 +124,7 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
 
-        <Notification
-          message={notification.message}
-          isError={notification.isError}
-        />
+        <Notification />
 
         <LoginForm
           username={username}
@@ -138,10 +141,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <Notification
-        message={notification.message}
-        isError={notification.isError}
-      />
+      <Notification />
 
       <Logout
         name={user.name}
