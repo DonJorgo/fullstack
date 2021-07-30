@@ -1,17 +1,24 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { createBlog } from '../reducers/blogReducer'
 
 const BlogForm = ({ onSubmit }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
 
+  const dispatch = useDispatch()
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    onSubmit({
+    onSubmit()
+
+    dispatch(createBlog({
       title: newTitle,
       author: newAuthor,
       url: newUrl
-    })
+    }))
 
     setNewTitle('')
     setNewAuthor('')

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -11,10 +11,9 @@ import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 
-import { setNotification, setError } from './reducers/notificationReducer'
+import { setError } from './reducers/notificationReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -24,13 +23,6 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort(compareByLikes) )
-    )
-  }, [])
-
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -38,21 +30,6 @@ const App = () => {
       setUser(user)
     }
   }, [])
-
-
-  const notify = (message, isError = false) => {
-    dispatch(isError
-      ? setError(message)
-      : setNotification(message)
-    )
-  }
-
-
-  const compareByLikes = (blog1, blog2) => {
-    if (blog1.likes < blog2.likes) return 1
-    if (blog1.likes > blog2.likes) return -1
-    return 0
-  }
 
 
   const handleLogin = async (event) => {
@@ -71,7 +48,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      notify(error.response.data.error, true)
+      dispatch(setError(error.response.data.error))
     }
   }
 
@@ -80,42 +57,6 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
     setUser(null)
-  }
-
-
-  const handleBlogSubmit = async (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    try {
-      const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
-      notify(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
-    } catch (error) {
-      notify(error.response.data.error, true)
-    }
-  }
-
-
-  const handleLike = async (id, blogObject) => {
-    try {
-      const returnedBlog = await blogService.update(id, blogObject)
-      const sortedBlogs = blogs
-        .filter(b => b.id !== id)
-        .concat(returnedBlog)
-        .sort(compareByLikes)
-      setBlogs(sortedBlogs)
-    } catch(error) {
-      notify(error.response.data.error, true)
-    }
-  }
-
-
-  const handleRemove = async (id) => {
-    try {
-      await blogService.remove(id)
-      setBlogs(blogs.filter(b => b.id !== id))
-    } catch(error) {
-      notify(error.response.data.error, true)
-    }
   }
 
 
@@ -137,6 +78,8 @@ const App = () => {
     )
   }
 
+
+
   return (
     <div>
       <h2>blogs</h2>
@@ -149,20 +92,11 @@ const App = () => {
       />
 
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm onSubmit={handleBlogSubmit} />
+        <BlogForm onSubmit={() => {blogFormRef.current.toggleVisibility()}} />
       </Togglable>
 
-      <div id="blogs">
-        {blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            onLike={handleLike}
-            onRemove={handleRemove}
-            ownBlog={blog.user.username === user.username}
-          />
-        )}
-      </div>
+      <BlogList user={user} />
+
     </div>
   )
 }
