@@ -30,15 +30,15 @@ const clearNotification = () => {
 
 const notificationReducer  = (state = { message: null }, action) => {
   switch(action.type) {
-  case actionType.SET_NOTIFICATION:
-    clearTimeout(state.timeoutId)
-    return {
-      ...action.payload,
-    }
-  case actionType.CLEAR_NOTIFICATION:
-    return { message: null }
-  default:
-    return state
+    case actionType.SET_NOTIFICATION:
+      clearTimeout(state.timeoutId)
+      return {
+        ...action.payload,
+      }
+    case actionType.CLEAR_NOTIFICATION:
+      return { message: null }
+    default:
+      return state
   }
 }
 
