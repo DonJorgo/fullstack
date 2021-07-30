@@ -3,7 +3,8 @@ import { setNotification, setError } from './notificationReducer'
 
 const actionType = {
   INIT_BLOGS: 'INIT_BLOGS',
-  NEW_BLOG: 'NEW_BLOG'
+  NEW_BLOG: 'NEW_BLOG',
+  UPDATE_BLOG: 'UPDATE_BLOG',
 }
 
 
@@ -44,6 +45,20 @@ export const createBlog = (newBlog) => {
   }
 }
 
+export const updateBlog = (blog) => {
+  return async dispatch => {
+    try {
+      const returnedBlog = await blogService.update(blog.id, blog)
+      dispatch({
+        type: actionType.UPDATE_BLOG,
+        payload: returnedBlog
+      })
+    } catch(error) {
+      dispatch(setError(error.response.data.error))
+    }
+  }
+}
+
 
 const blogReducer = (state = [], action) => {
   switch(action.type) {
@@ -51,6 +66,11 @@ const blogReducer = (state = [], action) => {
       return  [...action.payload]
     case actionType.NEW_BLOG:
       return [...state, action.payload]
+    case actionType.UPDATE_BLOG:
+      return state
+        .filter(blog => blog.id !== action.payload.id)
+        .concat(action.payload)
+        .sort(compareByLikes)
     default:
       return state
   }

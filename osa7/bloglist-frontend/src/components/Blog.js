@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, onLike, onRemove, ownBlog }) => {
+import { useDispatch } from 'react-redux'
+
+import { updateBlog } from '../reducers/blogReducer'
+
+
+const Blog = ({ blog, onRemove, ownBlog }) => {
   const [details, setDetails] = useState(false)
+
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,8 +30,27 @@ const Blog = ({ blog, onLike, onRemove, ownBlog }) => {
 
   const toggleDetails = () => setDetails(!details)
 
+  /*
+  const notify = (message, isError = false) => {
+    dispatch(isError
+      ? setError(message)
+      : setNotification(message)
+    )
+  }
+
+
+  const handleRemove = async (id) => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(b => b.id !== id))
+    } catch(error) {
+      notify(error.response.data.error, true)
+    }
+  }
+*/
+
   const handleLike = () => {
-    onLike(blog.id, { ...blog, likes: blog.likes+1 })
+    dispatch(updateBlog({ ...blog, likes: blog.likes + 1 }))
   }
 
   const handleRemove = () => {
