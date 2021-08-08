@@ -1,17 +1,12 @@
-import React, {
-  useEffect
-}  from 'react'
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux'
+import React, { useEffect }  from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Blog from './Blog'
 
 import { initializeBlogs } from '../reducers/blogReducer'
 
 
-const BlogList = ({ user }) => {
+const BlogList = (props) => {
 
   const dispatch = useDispatch()
 
@@ -27,9 +22,7 @@ const BlogList = ({ user }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          onLike={() => {}}
-          onRemove={() => {}}
-          ownBlog={blog.user.username === user.username}
+          {...props}
         />
       )}
     </div>

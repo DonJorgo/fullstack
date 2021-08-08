@@ -5,6 +5,7 @@ const actionType = {
   INIT_BLOGS: 'INIT_BLOGS',
   NEW_BLOG: 'NEW_BLOG',
   UPDATE_BLOG: 'UPDATE_BLOG',
+  REMOVE_BLOG: 'REMOVE_BLOG'
 }
 
 
@@ -59,18 +60,40 @@ export const updateBlog = (blog) => {
   }
 }
 
+export const removeBlog = (blog) => {
+  return async dispatch => {
+    try {
+      await blogService.remove(blog.id)
+      dispatch({
+        type: actionType.REMOVE_BLOG,
+        payload: { ...blog }
+      })
+    } catch(error) {
+      dispatch(setError(error.response.data.error))
+    }
+  }
+}
+
 
 const blogReducer = (state = [], action) => {
   switch(action.type) {
+
     case actionType.INIT_BLOGS:
       return  [...action.payload]
+
     case actionType.NEW_BLOG:
       return [...state, action.payload]
+
     case actionType.UPDATE_BLOG:
       return state
         .filter(blog => blog.id !== action.payload.id)
         .concat(action.payload)
         .sort(compareByLikes)
+
+    case actionType.REMOVE_BLOG:
+      return state
+        .filter(blog => blog.id !== action.payload.id)
+
     default:
       return state
   }

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
 
-import { updateBlog } from '../reducers/blogReducer'
+import { removeBlog, updateBlog } from '../reducers/blogReducer'
 
 
-const Blog = ({ blog, onRemove, ownBlog }) => {
+const Blog = ({ blog, user }) => {
   const [details, setDetails] = useState(false)
 
   const dispatch = useDispatch()
@@ -22,7 +23,9 @@ const Blog = ({ blog, onRemove, ownBlog }) => {
     borderRadius: '5px'
   }
 
-  const showForOwnBlog = { display: ownBlog ? '' : 'none' }
+  const isOwnBlog = blog.user.username === user.username
+
+  const showForOwnBlog = { display: isOwnBlog ? '' : 'none' }
 
   const showWithDetails = { display: details ? '' : 'none' }
 
@@ -30,32 +33,14 @@ const Blog = ({ blog, onRemove, ownBlog }) => {
 
   const toggleDetails = () => setDetails(!details)
 
-  /*
-  const notify = (message, isError = false) => {
-    dispatch(isError
-      ? setError(message)
-      : setNotification(message)
-    )
-  }
-
-
-  const handleRemove = async (id) => {
-    try {
-      await blogService.remove(id)
-      setBlogs(blogs.filter(b => b.id !== id))
-    } catch(error) {
-      notify(error.response.data.error, true)
-    }
-  }
-*/
-
   const handleLike = () => {
     dispatch(updateBlog({ ...blog, likes: blog.likes + 1 }))
   }
 
   const handleRemove = () => {
-    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
-      onRemove(blog.id)
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      dispatch(removeBlog(blog))
+    }
   }
 
 
@@ -65,9 +50,9 @@ const Blog = ({ blog, onRemove, ownBlog }) => {
       <button onClick={toggleDetails}>{buttonLabel}</button>
 
       <div style={showWithDetails} className="details">
-        <div>{blog.url}</div>
+        <div className="url">{blog.url}</div>
 
-        <div>
+        <div className="likes">
           {blog.likes}
           <button onClick={handleLike}>like</button>
         </div>
@@ -83,6 +68,13 @@ const Blog = ({ blog, onRemove, ownBlog }) => {
 
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    user: PropTypes.object.isRequired,
+    likes: PropTypes.number.isRequired
+  })
 }
 
 export default Blog

@@ -1,30 +1,60 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
+import { render, fireEvent, waitFor } from '../utils/testUtils'
 // import { prettyDOM } from '@testing-library/dom'
+
 import BlogForm from './BlogForm'
 
-test('<BlogFrom /> calls onSubmit with correct data', () => {
+describe('<BlogFrom />', () => {
 
+  const postMock = jest.fn()
   const onSubmitMock = jest.fn()
 
-  const component = render(
-    <BlogForm onSubmit={onSubmitMock} />
+  const server = setupServer(
+    rest.post('/api/blogs', (req, res, ctx) => {
+      postMock(req.body)
+      postMock()
+      return res(ctx.json({ ...req.body, id: 1 }))
+    })
   )
 
-  const blogForm = component.container.querySelector('form')
-  const titleInput = component.container.querySelector('[name=Title]')
-  const authorInput = component.container.querySelector('[name=Author]')
-  const urlInput = component.container.querySelector('[name=Url]')
+  beforeAll(() => server.listen())
 
-  fireEvent.change(titleInput, { target: { value: 'BlogForm.test Title' } })
-  fireEvent.change(authorInput, { target: { value: 'BlogForm.test Author' } })
-  fireEvent.change(urlInput, { target: { value: 'BlogForm.test URL' } })
+  let component
+  beforeEach(() => {
+    component = render(
+      <BlogForm onSubmit={onSubmitMock} />
+    )
+  })
 
-  fireEvent.submit(blogForm)
+  afterEach(() => {
+    server.resetHandlers()
+    postMock.mockClear()
+  })
+  afterAll(() => server.close())
 
-  expect(onSubmitMock.mock.calls).toHaveLength(1)
-  expect(onSubmitMock.mock.calls[0][0]).toHaveProperty('title','BlogForm.test Title')
-  expect(onSubmitMock.mock.calls[0][0]).toHaveProperty('author','BlogForm.test Author')
-  expect(onSubmitMock.mock.calls[0][0]).toHaveProperty('url','BlogForm.test URL')
+
+  test('on submit calls callback and posts new blog to the server', async () => {
+    const blog = {
+      title:'BlogForm.test Title',
+      author: 'BlogForm.test Author',
+      url: 'BlogForm.test URL'
+    }
+
+    const blogForm = component.container.querySelector('form')
+    const titleInput = component.container.querySelector('[name=Title]')
+    const authorInput = component.container.querySelector('[name=Author]')
+    const urlInput = component.container.querySelector('[name=Url]')
+
+    fireEvent.change(titleInput, { target: { value: blog.title } })
+    fireEvent.change(authorInput, { target: { value: blog.author } })
+    fireEvent.change(urlInput, { target: { value: blog.url } })
+    fireEvent.submit(blogForm)
+
+    expect(onSubmitMock.mock.calls).toHaveLength(1)
+    waitFor(() => expect(postMock).toHaveBeenCalledTimes(1))
+    waitFor(() => expect(postMock).toHaveBeenCalledWith(blog))
+  })
 })
