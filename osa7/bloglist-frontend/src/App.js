@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
+import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -46,6 +47,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <Logout />
+
       <Switch>
 
         <Route path="/users/:id">
@@ -54,6 +56,10 @@ const App = () => {
 
         <Route path="/users">
           <UserList/>
+        </Route>
+
+        <Route path="/blogs/:id">
+          <Blog/>
         </Route>
 
         <Route path="/">

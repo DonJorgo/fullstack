@@ -1,12 +1,11 @@
 import React, { useEffect }  from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Blog from './Blog'
-
-import { initializeBlogs } from '../reducers/blogReducer'
+import { initializeBlogs, selectBlogs } from '../reducers/blogReducer'
 
 
-const BlogList = (props) => {
+const BlogList = () => {
 
   const dispatch = useDispatch()
 
@@ -14,16 +13,24 @@ const BlogList = (props) => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const blogs = useSelector(state => state.blogs)
+  const blogs = useSelector(selectBlogs)
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
 
   return (
     <div id="blogs">
       {blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          {...props}
-        />
+        <div style={blogStyle} key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}
+          </Link>
+        </div>
       )}
     </div>
   )

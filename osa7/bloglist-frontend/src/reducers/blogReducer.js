@@ -8,6 +8,12 @@ const actionType = {
   REMOVE_BLOG: 'REMOVE_BLOG'
 }
 
+export const selectBlogs = state => state.blogs
+
+export const selectBlog = id =>
+  state =>
+    state.blogs.find(blog => blog.id === id)
+
 
 const compareByLikes = (blog1, blog2) => {
   if (blog1.likes < blog2.likes) return 1
@@ -68,6 +74,9 @@ export const removeBlog = (blog) => {
         type: actionType.REMOVE_BLOG,
         payload: { ...blog }
       })
+      dispatch(setNotification(
+        `removed blog ${blog.title} by ${blog.author}`
+      ))
     } catch(error) {
       dispatch(setError(error.response.data.error))
     }
