@@ -7,6 +7,10 @@ const actionType = {
 
 export const selectUsers = state => state.users
 
+export const selectUser = id =>
+  state =>
+    state.users.find(user => user.id === id)
+
 export const initializeUsers = () => {
   return async dispatch => {
     try {

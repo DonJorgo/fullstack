@@ -9,6 +9,7 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import UserList from './components/UserList'
+import User from './components/User'
 
 
 import { loggedIn, selectUser } from './reducers/loginReducer'
@@ -25,11 +26,12 @@ const App = () => {
     }
   }, [])
 
-  const user = useSelector(selectUser)
+  const loggedInUser = useSelector(selectUser)
 
   const blogFormRef = useRef()
 
-  if (user === null) {
+
+  if (loggedInUser === null) {
     return (
       <div>
         <h2>Log in to application</h2>
@@ -45,6 +47,10 @@ const App = () => {
       <Notification />
       <Logout />
       <Switch>
+
+        <Route path="/users/:id">
+          <User/>
+        </Route>
 
         <Route path="/users">
           <UserList/>
