@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 
-import store from '../store'
+import { storeWithState } from '../store'
 
 
 export const initialUsers =[
@@ -46,7 +46,12 @@ export const initialBlogs = [
 
 
 // Purpose of this function is to hide Redux as implementation detail from tests
-function customRender(ui, { ...renderOptions } = {}) {
+function customRender(
+  ui, {
+    preloadedState,
+    store = storeWithState(preloadedState),
+    ...renderOptions
+  } = {}) {
   function Wrapper({ children }) {
     return <Provider store={store}>
       {children}

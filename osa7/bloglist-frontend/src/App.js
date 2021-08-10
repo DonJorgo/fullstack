@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
@@ -8,95 +8,46 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
-import loginService from './services/login'
-import blogService from './services/blogs'
 
-import { setError } from './reducers/notificationReducer'
+import { loggedIn, selectUser } from './reducers/loginReducer'
+import loginUtils from './utils/loginUtils'
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
 
-  const blogFormRef = useRef()
-
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
-      setUser(user)
+    const loggedUser = loginUtils.getLoggedUser()
+    if (loggedUser) {
+      dispatch(loggedIn(loggedUser))
     }
   }, [])
 
+  const user = useSelector(selectUser)
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (error) {
-      dispatch(setError(error.response.data.error))
-    }
-  }
-
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    blogService.setToken(null)
-    setUser(null)
-  }
-
+  const blogFormRef = useRef()
 
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
-
         <Notification />
-
-        <LoginForm
-          username={username}
-          password={password}
-          onSubmit={handleLogin}
-          onUsernameChange={({ target }) => setUsername(target.value)}
-          onPasswordChange={({ target }) => setPassword(target.value)}
-        />
+        <LoginForm />
       </div>
     )
   }
 
-
-
   return (
     <div>
       <h2>blogs</h2>
-
       <Notification />
-
-      <Logout
-        name={user.name}
-        onLogout={handleLogout}
-      />
+      <Logout />
 
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm onSubmit={() => {blogFormRef.current.toggleVisibility()}} />
       </Togglable>
 
-      <BlogList user={user} />
-
+      <BlogList />
     </div>
   )
 }

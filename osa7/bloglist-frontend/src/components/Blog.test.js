@@ -35,7 +35,10 @@ describe('<Blog />', () => {
     let component
     beforeEach(() => {
       component = render(
-        <Blog blog={blog} user={user}/>
+        <Blog blog={blog}/>,
+        {
+          preloadedState: { login: user }
+        }
       )
     })
 
@@ -113,11 +116,16 @@ describe('<Blog />', () => {
   })
 
   describe('given a blog of another user', () => {
-    const user = initialBlogs[0]
+    const user = initialUsers[0]
     const otherUsersBlog = initialBlogs[2]
 
     test('when view button is pressed does not show remove ', () => {
-      const component = render(<Blog blog={otherUsersBlog} user={user} />)
+      const component = render(
+        <Blog blog={otherUsersBlog}/>,
+        {
+          preloadedState: { login: user }
+        }
+      )
       const viewButton = component.getByText('view')
       const removeButton = component.getByText('Remove')
 

@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { removeBlog, updateBlog } from '../reducers/blogReducer'
+import { removeBlog, updateBlog, } from '../reducers/blogReducer'
+import { selectUser } from '../reducers/loginReducer'
 
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const [details, setDetails] = useState(false)
 
   const dispatch = useDispatch()
+
+  const user = useSelector(selectUser)
 
   const blogStyle = {
     paddingTop: 10,
@@ -72,7 +75,6 @@ const Blog = ({ blog, user }) => {
 
 Blog.propTypes = {
   blog: PropTypes.shape({
-    user: PropTypes.object.isRequired,
     likes: PropTypes.number.isRequired
   })
 }

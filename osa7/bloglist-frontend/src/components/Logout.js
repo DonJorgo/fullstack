@@ -1,11 +1,21 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const Logout = ({ name, onLogout }) =>
-  <p>
-    {name} logged in
-    <button onClick={onLogout}>
+import { logout, selectUser } from '../reducers/loginReducer'
+
+const Logout = () => {
+  const dispatch = useDispatch()
+
+  const user = useSelector(selectUser)
+
+  return (
+    <p>
+      {user.name} logged in
+      <button onClick={() => dispatch(logout())}>
       logout
-    </button>
-  </p>
+      </button>
+    </p>
+  )
+}
 
 export default Logout
