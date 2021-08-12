@@ -8,13 +8,21 @@ const Logout = () => {
 
   const user = useSelector(selectUser)
 
+  if (!user) {
+    return null
+  }
+
+  const logoutStyle = { padding: 5 }
+
+  const buttonStyle = { margin: 5 }
+
   return (
-    <p>
+    <span id="logout" style={logoutStyle}>
       {user.name} logged in
-      <button onClick={() => dispatch(logout())}>
+      <button style={buttonStyle} onClick={() => dispatch(logout())}>
       logout
       </button>
-    </p>
+    </span>
   )
 }
 

@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
+import Menu from './components/Menu'
 import LoginForm from './components/LoginForm'
-import Logout from './components/Logout'
 import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+
 import UserList from './components/UserList'
 import User from './components/User'
 
@@ -29,8 +29,6 @@ const App = () => {
 
   const loggedInUser = useSelector(selectUser)
 
-  const blogFormRef = useRef()
-
 
   if (loggedInUser === null) {
     return (
@@ -44,9 +42,9 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <Menu />
+      <h1>Blog App</h1>
       <Notification />
-      <Logout />
 
       <Switch>
 
@@ -63,12 +61,10 @@ const App = () => {
         </Route>
 
         <Route path="/">
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <BlogForm onSubmit={() => {blogFormRef.current.toggleVisibility()}} />
-          </Togglable>
-
+          <BlogForm />
           <BlogList />
         </Route>
+
       </Switch>
     </div>
   )

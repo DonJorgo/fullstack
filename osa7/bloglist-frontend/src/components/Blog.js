@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { removeBlog, updateBlog, selectBlog } from '../reducers/blogReducer'
+import { initializeBlogs, removeBlog, updateBlog, selectBlog, selectBlogs } from '../reducers/blogReducer'
 import { selectUser } from '../reducers/loginReducer'
 
 
@@ -11,10 +11,18 @@ const Blog = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
+  const blogId = useParams().id
+  const blog = useSelector(selectBlog(blogId))
   const user = useSelector(selectUser)
-  const blog = useSelector(selectBlog(useParams().id))
+  const blogs = useSelector(selectBlogs)
 
-  const isOwnBlog = blog.user.username === user.username
+  useEffect(() => {
+    if (!blogs || blogs.length === 0) {
+      dispatch(initializeBlogs())
+    }
+  })
+
+  const isOwnBlog = blog && user && blog.user.username === user.username
   const showForOwnBlog = { display: isOwnBlog ? '' : 'none' }
 
   const removeButtonStyle = {
@@ -33,6 +41,9 @@ const Blog = () => {
     }
   }
 
+  if (!blog) {
+    return null
+  }
 
   return(
     <div>

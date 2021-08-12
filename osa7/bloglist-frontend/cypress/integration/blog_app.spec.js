@@ -71,17 +71,16 @@ describe('Blog app', function (){
       })
 
       it('one of those can be liked', function() {
-        cy.contains('title2').contains('view').click()
-        cy.contains('title2').contains('like').parent().as('secondBlogLikes')
+        cy.contains('title2').click()
+        cy.contains('like').parent().as('secondBlogLikes')
         cy.get('@secondBlogLikes').contains('0')
         cy.get('@secondBlogLikes').find('button').click()
         cy.get('@secondBlogLikes').contains('1')
       })
 
       it('creator of a blog can remove it', function() {
-        cy.get('html').should('contain', 'title3 author3')
-        cy.contains('title3').contains('view').click()
-        cy.contains('title3').contains('Remove').click()
+        cy.contains('title3').click()
+        cy.contains('Remove').click()
         cy.get('html').should('not.contain', 'title3 author3')
       })
 
@@ -92,27 +91,27 @@ describe('Blog app', function (){
           password: 'salasana'
         })
         cy.login({ username: 'otheruser', password: 'salasana' })
-        cy.contains('view').click()
+        cy.contains('title3').click()
         cy.get('html').contains('Remove').should('not.be.visible')
       })
 
       it('they are oredered based on likes', function() {
-        clickBlog('title2', 3)
-        clickBlog('title3', 1)
-        clickBlog('title4', 2)
+        likeBlog('title2', 3)
+        likeBlog('title3', 1)
+        likeBlog('title4', 2)
         cy.get('#blogs > div:nth-child(1)').contains('title2')
         cy.get('#blogs > div:nth-child(2)').contains('title4')
         cy.get('#blogs > div:nth-child(3)').contains('title3')
         cy.get('#blogs > div:nth-child(4)').contains('title1')
       })
 
-      function clickBlog(title, times) {
-        cy.get('#blogs').contains(title).as(title)
-        cy.get(`@${title}`).contains('view').click()
+      function likeBlog(title, times) {
+        cy.contains(title).click()
         for(let i = 0; i < times; i++) {
-          cy.get(`@${title}`).contains('like').click()
-          cy.get(`@${title}`).contains('like').parent().contains(i+1)
+          cy.contains('like').click()
+          cy.contains('like').parent().contains(i+1)
         }
+        cy.contains('blogs').click()
       }
 
     })

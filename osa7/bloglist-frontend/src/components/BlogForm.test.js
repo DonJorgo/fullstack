@@ -10,7 +10,6 @@ import BlogForm from './BlogForm'
 describe('<BlogFrom />', () => {
 
   const postMock = jest.fn()
-  const onSubmitMock = jest.fn()
 
   const server = setupServer(
     rest.post('/api/blogs', (req, res, ctx) => {
@@ -25,7 +24,7 @@ describe('<BlogFrom />', () => {
   let component
   beforeEach(() => {
     component = render(
-      <BlogForm onSubmit={onSubmitMock} />
+      <BlogForm />
     )
   })
 
@@ -36,7 +35,7 @@ describe('<BlogFrom />', () => {
   afterAll(() => server.close())
 
 
-  test('on submit calls callback and posts new blog to the server', async () => {
+  test('on submit posts new blog to the server', async () => {
     const blog = {
       title:'BlogForm.test Title',
       author: 'BlogForm.test Author',
@@ -53,7 +52,6 @@ describe('<BlogFrom />', () => {
     fireEvent.change(urlInput, { target: { value: blog.url } })
     fireEvent.submit(blogForm)
 
-    expect(onSubmitMock.mock.calls).toHaveLength(1)
     waitFor(() => expect(postMock).toHaveBeenCalledTimes(1))
     waitFor(() => expect(postMock).toHaveBeenCalledWith(blog))
   })
