@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
+import Comments from './Comments'
+
 import { initializeBlogs, removeBlog, updateBlog, selectBlog, selectBlogs } from '../reducers/blogReducer'
 import { selectUser } from '../reducers/loginReducer'
 
@@ -65,6 +67,8 @@ const Blog = () => {
             Remove
         </button>
       </div>
+
+      <Comments blog={blog} />
 
     </div>
   )
