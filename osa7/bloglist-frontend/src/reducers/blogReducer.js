@@ -5,7 +5,8 @@ const actionType = {
   INIT_BLOGS: 'INIT_BLOGS',
   NEW_BLOG: 'NEW_BLOG',
   UPDATE_BLOG: 'UPDATE_BLOG',
-  REMOVE_BLOG: 'REMOVE_BLOG'
+  REMOVE_BLOG: 'REMOVE_BLOG',
+  ADD_COMMENT: 'ADD_COMMENT'
 }
 
 export const selectBlogs = state => state.blogs
@@ -84,6 +85,23 @@ export const removeBlog = (blog) => {
 }
 
 
+export const addComment = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const returnedComment = await blogService.addComment(blog.id, comment)
+      dispatch({
+        type: actionType.ADD_COMMENT,
+        payload: {
+          blogId: blog.id,
+          comment: returnedComment
+        }
+      })
+    } catch(error) {
+      dispatch(setError(error.response.data.error))
+    }
+  }
+}
+
 const blogReducer = (state = [], action) => {
   switch(action.type) {
 
@@ -102,6 +120,17 @@ const blogReducer = (state = [], action) => {
     case actionType.REMOVE_BLOG:
       return state
         .filter(blog => blog.id !== action.payload.id)
+
+    case actionType.ADD_COMMENT:
+      return state
+        .map(blog =>
+          blog.id === action.payload.blogId
+            ? {
+              ...blog,
+              comments: [...blog.comments, action.payload.comment]
+            }
+            : blog
+        )
 
     default:
       return state

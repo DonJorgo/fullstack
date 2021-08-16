@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Comments from './Comments'
 
-import { initializeBlogs, removeBlog, updateBlog, selectBlog, selectBlogs } from '../reducers/blogReducer'
+import {
+  initializeBlogs, removeBlog, updateBlog, addComment,
+  selectBlog, selectBlogs } from '../reducers/blogReducer'
+
 import { selectUser } from '../reducers/loginReducer'
 
 
@@ -43,6 +46,10 @@ const Blog = () => {
     }
   }
 
+  const handleComment = (comment) => {
+    dispatch(addComment(blog, comment))
+  }
+
   if (!blog) {
     return null
   }
@@ -68,7 +75,7 @@ const Blog = () => {
         </button>
       </div>
 
-      <Comments blog={blog} />
+      <Comments blog={blog} onSubmitComment={handleComment}/>
 
     </div>
   )
