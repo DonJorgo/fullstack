@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 
 import { login } from '../reducers/loginReducer'
 
@@ -19,29 +20,28 @@ const LoginForm = () => {
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
-        <div>
-        username
-          <input
-            id="username"
+      <h2>Log in to application</h2>
+      <Form onSubmit={handleLogin}>
+        <Form.Group controlId="username">
+          <Form.Label>username</Form.Label>
+          <Form.Control
             type="text"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
-        password
-          <input
-            id="password"
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>password</Form.Label>
+          <Form.Control
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        </Form.Group>
+        <Button variant="primary" type="submit">login</Button>
+      </Form>
     </div>
   )
 }

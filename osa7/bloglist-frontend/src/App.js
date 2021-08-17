@@ -32,8 +32,7 @@ const App = () => {
 
   if (loggedInUser === null) {
     return (
-      <div>
-        <h2>Log in to application</h2>
+      <div className="container">
         <Notification />
         <LoginForm />
       </div>
