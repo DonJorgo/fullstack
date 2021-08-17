@@ -41,7 +41,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <Menu />
       <h1>Blog App</h1>
       <Notification />
