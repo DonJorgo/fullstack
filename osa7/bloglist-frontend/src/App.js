@@ -42,7 +42,6 @@ const App = () => {
   return (
     <div className="container">
       <Menu />
-      <h1>Blog App</h1>
       <Notification />
 
       <Switch>
@@ -52,6 +51,7 @@ const App = () => {
         </Route>
 
         <Route path="/users">
+          <h3>Users</h3>
           <UserList/>
         </Route>
 
@@ -60,6 +60,7 @@ const App = () => {
         </Route>
 
         <Route path="/">
+          <h3>Blogs</h3>
           <BlogForm />
           <BlogList />
         </Route>

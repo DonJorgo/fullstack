@@ -12,12 +12,11 @@ const Logout = () => {
     return null
   }
 
-  const logoutStyle = { padding: 5 }
 
   const buttonStyle = { margin: 5 }
 
   return (
-    <span id="logout" style={logoutStyle}>
+    <span id="logout" >
       {user.name} logged in
       <button style={buttonStyle} onClick={() => dispatch(logout())}>
       logout

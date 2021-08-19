@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { Card, Button, Row, Col } from 'react-bootstrap'
+
 
 import Comments from './Comments'
 
@@ -30,10 +32,6 @@ const Blog = () => {
   const isOwnBlog = blog && user && blog.user.username === user.username
   const showForOwnBlog = { display: isOwnBlog ? '' : 'none' }
 
-  const removeButtonStyle = {
-    backgroundColor: 'lightblue',
-    borderRadius: '5px'
-  }
 
   const handleLike = () => {
     dispatch(updateBlog({ ...blog, likes: blog.likes + 1 }))
@@ -55,29 +53,37 @@ const Blog = () => {
   }
 
   return(
-    <div>
-      <h2>{blog.title} {blog.author}</h2>
-
-      <a href={blog.url} className="url">{blog.url}</a>
-
-      <div className="likes">
-        {blog.likes} likes
-        <button onClick={handleLike}>
-          like
-        </button>
-      </div>
-
-      <div>added by {blog.user.name}</div>
-
-      <div style={showForOwnBlog}>
-        <button style={removeButtonStyle} onClick={handleRemove}>
+    <>
+      <Card bg="light">
+        <Card.Header as="h2">
+          <Row>
+            <Col>
+              {blog.title}
+            </Col>
+            <Col md="auto">
+              <Button variant="outline-danger" style={showForOwnBlog} onClick={handleRemove}>
             Remove
-        </button>
-      </div>
+              </Button>
+            </Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          <Card.Title>{blog.author}</Card.Title>
 
+          <Card.Link href={blog.url} className="url">{blog.url}</Card.Link>
+
+          <Card.Text className="likes">
+            {blog.likes} likes
+            <Button onClick={handleLike} variant="outline-success" size="sm">
+              like
+            </Button>
+          </Card.Text>
+
+          <Card.Footer className="text-muted">added by {blog.user.name}</Card.Footer>
+        </Card.Body>
+      </Card>
       <Comments blog={blog} onSubmitComment={handleComment}/>
-
-    </div>
+    </>
   )
 }
 

@@ -17,19 +17,21 @@ const BlogList = () => {
   const blogs = useSelector(selectBlogs)
 
   return (
-    <Table striped id="blogs">
-      <tbody>
-        {blogs.map(blog =>
-          <tr key={blog.id}>
-            <td>
-              <Link to={`/blogs/${blog.id}`}>
-                {blog.title} {blog.author}
-              </Link>
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </Table>
+    <div>
+      <Table striped id="blogs">
+        <tbody>
+          {blogs.map(blog =>
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} {blog.author}
+                </Link>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    </div>
   )
 }
 

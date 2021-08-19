@@ -1,5 +1,6 @@
 import React,{ useState }  from 'react'
 import PropTypes from 'prop-types'
+import { Card, ListGroup } from 'react-bootstrap'
 
 
 const CommentForm = ({ onSubmitComment }) => {
@@ -26,13 +27,15 @@ const CommentList = ({ blog }) => {
   }
 
   return (
-    <ul>
+    <ListGroup variant="flush">
       {
         blog.comments.map(comment =>
-          <li key={comment.id}>{comment.content}</li>
+          <ListGroup.Item key={comment.id}>
+            {comment.content}
+          </ListGroup.Item>
         )
       }
-    </ul>
+    </ListGroup>
   )
 }
 
@@ -44,11 +47,13 @@ const Comments = (props) => {
   }
 
   return (
-    <div>
-      <h3>Comments</h3>
-      <CommentForm {...props} />
-      <CommentList {...props} />
-    </div>
+    <Card>
+      <Card.Header>Comments</Card.Header>
+      <Card.Body>
+        <CommentForm {...props} />
+        <CommentList {...props} />
+      </Card.Body>
+    </Card>
   )
 }
 

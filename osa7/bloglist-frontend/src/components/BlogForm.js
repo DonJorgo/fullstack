@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { Button, Form, Row, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 
 import Togglable from './Togglable'
@@ -32,36 +33,42 @@ const BlogForm = () => {
   return (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
       <h2>create new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={newTitle}
-            name="Title"
-            onChange={({ target }) => setNewTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={newAuthor}
-            name="Author"
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={newUrl}
-            name="Url"
-            onChange={({ target }) => setNewUrl(target.value)}
-          />
-        </div>
-        <button id="submitNewBlog" type="submit">create</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group as={Row} controlId="newTitle">
+          <Form.Label column sm={2}>title:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={newTitle}
+              name="Title"
+              onChange={({ target }) => setNewTitle(target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="newAuthor">
+          <Form.Label column>author:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={newAuthor}
+              name="Author"
+              onChange={({ target }) => setNewAuthor(target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} controlId="newUrl">
+          <Form.Label column>url:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              value={newUrl}
+              name="Url"
+              onChange={({ target }) => setNewUrl(target.value)}
+            />
+          </Col>
+        </Form.Group>
+        <Button variant="success" id="submitNewBlog" type="submit">create</Button>
+      </Form>
     </Togglable>
   )
 }

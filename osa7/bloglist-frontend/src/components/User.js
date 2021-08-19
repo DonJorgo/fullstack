@@ -1,6 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Card, ListGroup } from 'react-bootstrap'
+
 import { selectUser } from '../reducers/userReducer'
 
 const User = () => {
@@ -13,16 +15,22 @@ const User = () => {
   }
 
   return (
-    <div>
-      <h2>{user.name}</h2>
+    <Card bg="light">
+      <Card.Header as="h2">{user.name}</Card.Header>
 
-      <h3>added blogs</h3>
-      <ul>
-        {user.blogs.map(blog => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
-    </div>
+      <Card.Body>
+        <Card.Title>added blogs</Card.Title>
+        <Card.Text>
+          <ListGroup>
+            {user.blogs.map(blog => (
+              <ListGroup.Item key={blog.id}>
+                {blog.title}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
 
