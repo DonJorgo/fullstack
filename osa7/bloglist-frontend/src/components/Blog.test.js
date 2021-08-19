@@ -88,9 +88,7 @@ describe('<Blog />', () => {
         const updatedBlog = {
           ...blog,
           likes: blog.likes + 1,
-          user: blog.user.id
         }
-        delete updatedBlog.id
         await waitFor(() => expect(updateServerMock).toHaveBeenCalledTimes(1))
         await waitFor(() => expect(updateServerMock).toHaveBeenCalledWith(blog.id, updatedBlog))
       })

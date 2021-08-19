@@ -30,7 +30,7 @@ describe('Blog app', function (){
       cy.contains('button', 'login').click()
 
       cy.contains('invalid username or password')
-        .and('have.css', 'color', 'rgb(255, 0, 0)')
+        .and('have.css', 'color', 'rgb(114, 28, 36)')
 
       cy.contains('Log in to application')
       cy.contains('username').get('#username')
@@ -49,13 +49,13 @@ describe('Blog app', function (){
 
     it('A blog can be created', function() {
       cy.contains('button', 'create new blog').click()
-      cy.contains('title:').find('input').type('Blog Title')
-      cy.contains('author:').find('input').type('Blog Author')
-      cy.contains('url:').find('input').type('http://localhost')
+      cy.contains('title:').parent().find('input').type('Blog Title')
+      cy.contains('author:').parent().find('input').type('Blog Author')
+      cy.contains('url:').parent().find('input').type('http://localhost')
       cy.get('#submitNewBlog').click()
 
       cy.contains('a new blog Blog Title by Blog Author added')
-        .and('have.css', 'color', 'rgb(0, 128, 0)')
+        .and('have.css', 'color', 'rgb(21, 87, 36)')
 
       cy.get('html')
         .should('contain', 'Blog Title Blog Author')
@@ -81,7 +81,7 @@ describe('Blog app', function (){
       it('creator of a blog can remove it', function() {
         cy.contains('title3').click()
         cy.contains('Remove').click()
-        cy.get('html').should('not.contain', 'title3 author3')
+        cy.get('table').should('not.contain', 'title3 author3')
       })
 
       it('user other than the creator of a blog can not remove it', function(){
@@ -99,10 +99,11 @@ describe('Blog app', function (){
         likeBlog('title2', 3)
         likeBlog('title3', 1)
         likeBlog('title4', 2)
-        cy.get('#blogs > div:nth-child(1)').contains('title2')
-        cy.get('#blogs > div:nth-child(2)').contains('title4')
-        cy.get('#blogs > div:nth-child(3)').contains('title3')
-        cy.get('#blogs > div:nth-child(4)').contains('title1')
+        cy.get('#blogs > tbody').as('blogs')
+        cy.get('@blogs').get('tr:nth-child(1)').contains('title2')
+        cy.get('@blogs').get('tr:nth-child(2)').contains('title4')
+        cy.get('@blogs').get('tr:nth-child(3)').contains('title3')
+        cy.get('@blogs').get('tr:nth-child(4)').contains('title1')
       })
 
       function likeBlog(title, times) {

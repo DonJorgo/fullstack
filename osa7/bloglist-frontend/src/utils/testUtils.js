@@ -27,7 +27,8 @@ export const initialBlogs = [
     author: 'author1',
     url: 'url1',
     likes: 0,
-    user: initialUsers[0]
+    user: initialUsers[0],
+    comments: []
   },
   {
     id: '2',
@@ -35,7 +36,8 @@ export const initialBlogs = [
     author: 'author2',
     url: 'url2',
     likes: 0,
-    user: initialUsers[0]
+    user: initialUsers[0],
+    comments: []
   },
   {
     id: '3',
@@ -43,7 +45,8 @@ export const initialBlogs = [
     author: 'author3',
     url: 'url3',
     likes: 0,
-    user: initialUsers[1]
+    user: initialUsers[1],
+    comments: []
   },
 ]
 
